@@ -1,0 +1,9 @@
+.hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  padding: 16px;
+  background: #e8f5e9;
+  border-radius: 12px;
+}

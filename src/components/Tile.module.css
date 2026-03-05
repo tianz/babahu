@@ -1,0 +1,46 @@
+.tile {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 60px;
+  border: 2px solid #aaa;
+  border-radius: 6px;
+  background: #fffde7;
+  cursor: default;
+  padding: 0;
+  font-family: inherit;
+  user-select: none;
+  transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+}
+
+.number {
+  font-size: 1.2rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.suit {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.selected {
+  background: #fff9c4;
+  border-color: #f9a825;
+  box-shadow: 0 0 0 2px #f9a825;
+}
+
+.dim {
+  opacity: 0.4;
+}

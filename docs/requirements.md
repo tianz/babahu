@@ -1,0 +1,24 @@
+# Requirements
+
+This app is a Mahjong practice app. The main feature is that it will give player 13 tiles each round, and the player needs to correctly pick the ones that can win the game.
+
+## Mahjong rule:
+It should use the Sichuan Mahjong rule.
+
+## Language:
+The application should be in Simplified Chinese.
+
+Below are the specifications of each screen:
+
+## Main Screen
+The main screen should have a button to start a new game. Each game should be 10 rounds.
+
+## Game Screen
+On the top, it should display 13 tiles. The tiles should be sorted in order: Simples (万), then Dots (筒), then Banmboo (条). Within each set the tiles should be sorted in numerical order.
+
+On the bottom, it should display all 27 possible tiles, and a submit button.
+
+## Player Interaction
+On each round, the player clicks on the tiles that can win the game (which will be highlighted), and the submit. The player gets the points if they correctly pick the ones that can win the game. Picking the ones that don't win the game or not picking the ones that do means losing the point.
+
+The game will go on for 10 rounds and show a final score at the end.

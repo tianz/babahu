@@ -1,7 +1,7 @@
 # babahu
 
 ## Project Overview
-A frontend-only React application. No backend, no server-side code.
+A Mahjong practice website.
 
 ## Tech Stack
 - **Framework**: React (with Vite as the build tool)
@@ -35,15 +35,15 @@ npm run build     # Production build
 npm run preview   # Preview production build
 ```
 
+## Requirements
+See [docs/requirements.md](docs/requirements.md) for detailed app requirements.
+See [docs/execution-plan.md](docs/execution-plan.md) for the implementation plan.
+
 ## Conventions
 - Use functional components and hooks only — no class components
 - Keep components small and focused
 - Co-locate component styles with their component file if using CSS modules
 - No API calls to a backend — all data is local, static, or from public third-party APIs
-
-## Goals
-- Basic page with a static message
-- Deploy to GitHub Pages
 
 ## Deployment: GitHub Pages
 - Host: GitHub Pages via the `gh-pages` branch
