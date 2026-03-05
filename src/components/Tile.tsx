@@ -1,4 +1,5 @@
 import type { Tile } from '../types/mahjong'
+import { tileUnicode } from '../utils/mahjong'
 import styles from './Tile.module.css'
 
 interface Props {
@@ -19,9 +20,9 @@ export default function TileComponent({ tile, selected, onClick, dim }: Props) {
       ].join(' ')}
       onClick={onClick}
       disabled={!onClick}
+      title={`${tile.number}${tile.suit}`}
     >
-      <span className={styles.number}>{tile.number}</span>
-      <span className={styles.suit}>{tile.suit}</span>
+      {tileUnicode(tile)}
     </button>
   )
 }

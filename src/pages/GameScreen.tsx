@@ -1,27 +1,27 @@
 import { useState } from 'react'
 import type { Tile } from '../types/mahjong'
-import { getWinningTiles, tileKey } from '../utils/mahjong'
+import { getWinningTiles, tileKey, sortHand } from '../utils/mahjong'
 import Hand from '../components/Hand'
 import TilePicker from '../components/TilePicker'
+import TileComponent from '../components/Tile'
 import styles from './GameScreen.module.css'
 
 interface Props {
   round: number
   score: number
   hand: Tile[]
-  onRoundComplete: (pointDelta: number) => void
+  onRoundComplete: (point: number) => void
 }
 
 export default function GameScreen({ round, score, hand, onRoundComplete }: Props) {
   const [selected, setSelected] = useState<Tile[]>([])
-  const [submitted, setSubmitted] = useState(false)
-  const [feedback, setFeedback] = useState<string>('')
+  const [reviewing, setReviewing] = useState(false)
+  const [earnedPoint, setEarnedPoint] = useState(0)
 
   const winningTiles = getWinningTiles(hand)
   const winningKeys = new Set(winningTiles.map(tileKey))
 
   function handleToggle(tile: Tile) {
-    if (submitted) return
     const key = tileKey(tile)
     setSelected(prev =>
       prev.some(t => tileKey(t) === key)
@@ -31,29 +31,54 @@ export default function GameScreen({ round, score, hand, onRoundComplete }: Prop
   }
 
   function handleSubmit() {
-    if (submitted) return
     const selectedKeys = new Set(selected.map(tileKey))
-
-    // Point = +1 for each correct, -1 for each wrong (missed or extra)
-    let delta = 0
-    winningKeys.forEach(k => { delta += selectedKeys.has(k) ? 1 : -1 })
-    selectedKeys.forEach(k => { if (!winningKeys.has(k)) delta -= 1 })
-
-    setSubmitted(true)
-
-    if (winningTiles.length === 0) {
-      setFeedback('这手牌无法听牌（全不中也算对）')
-      onRoundComplete(selectedKeys.size === 0 ? 1 : -1)
-    } else {
-      const correct = [...selectedKeys].filter(k => winningKeys.has(k)).length
-      const total = winningKeys.size
-      setFeedback(`正确答案：${winningTiles.map(t => `${t.number}${t.suit}`).join('、')}（${correct}/${total}）`)
-      onRoundComplete(delta)
-    }
+    const isCorrect =
+      selectedKeys.size === winningKeys.size &&
+      [...selectedKeys].every(k => winningKeys.has(k))
+    setEarnedPoint(isCorrect ? 1 : 0)
+    setReviewing(true)
   }
 
-  function handleNext() {
-    onRoundComplete(0) // signal to advance (delta already applied)
+  if (reviewing) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <span>第 {round} / 10 轮</span>
+          <span>
+            得分：{score}
+            <span className={earnedPoint ? styles.correct : styles.wrong}>
+              {earnedPoint ? '  ✓ +1' : '  ✗ +0'}
+            </span>
+          </span>
+        </div>
+
+        <section>
+          <h2 className={styles.sectionLabel}>你的手牌</h2>
+          <Hand tiles={hand} />
+        </section>
+
+        <section>
+          <h2 className={styles.sectionLabel}>
+            胡牌张（共 {winningTiles.length} 张）
+          </h2>
+          <div className={styles.winningList}>
+            {winningTiles.map(wt => (
+              <div key={tileKey(wt)} className={styles.winningEntry}>
+                <div className={styles.winningLabel}>
+                  <TileComponent tile={wt} />
+                  <span>{wt.number}{wt.suit}</span>
+                </div>
+                <Hand tiles={sortHand([...hand, wt])} />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <button className={styles.button} onClick={() => onRoundComplete(earnedPoint)}>
+          {round < 10 ? '下一轮' : '查看结果'}
+        </button>
+      </div>
+    )
   }
 
   return (
@@ -70,19 +95,10 @@ export default function GameScreen({ round, score, hand, onRoundComplete }: Prop
 
       <section>
         <h2 className={styles.sectionLabel}>选择能胡牌的张（可多选）</h2>
-        <TilePicker selected={selected} onToggle={handleToggle} disabled={submitted} />
+        <TilePicker selected={selected} onToggle={handleToggle} />
       </section>
 
-      {!submitted ? (
-        <button className={styles.button} onClick={handleSubmit}>提交</button>
-      ) : (
-        <div className={styles.result}>
-          <p className={styles.feedback}>{feedback}</p>
-          <button className={styles.button} onClick={handleNext}>
-            {round < 10 ? '下一轮' : '查看结果'}
-          </button>
-        </div>
-      )}
+      <button className={styles.button} onClick={handleSubmit}>提交</button>
     </div>
   )
 }

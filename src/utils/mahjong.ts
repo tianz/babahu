@@ -13,13 +13,28 @@ export function generateDeck(): Tile[] {
 }
 
 export function dealHand(): Tile[] {
-  const deck = generateDeck()
-  // Fisher-Yates shuffle then take 13
-  for (let i = deck.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[deck[i], deck[j]] = [deck[j], deck[i]]
+  const allSuits: Suit[] = ['万', '筒', '条']
+  // Keep retrying until we get a tenpai hand
+  while (true) {
+    // Randomly pick 1 or 2 suits (Sichuan rule)
+    const shuffled = [...allSuits].sort(() => Math.random() - 0.5)
+    const numSuits = Math.random() < 0.3 ? 1 : 2
+    const chosen = new Set(shuffled.slice(0, numSuits))
+
+    // Build deck from only chosen suits
+    const deck: Tile[] = ALL_TILES
+      .filter(t => chosen.has(t.suit))
+      .flatMap(tile => [tile, tile, tile, tile])
+
+    // Fisher-Yates shuffle
+    for (let i = deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[deck[i], deck[j]] = [deck[j], deck[i]]
+    }
+
+    const hand = sortHand(deck.slice(0, 13))
+    if (getWinningTiles(hand).length > 0) return hand
   }
-  return sortHand(deck.slice(0, 13))
 }
 
 export function sortHand(tiles: Tile[]): Tile[] {
@@ -35,6 +50,20 @@ export function tileKey(tile: Tile): string {
   return `${tile.suit}${tile.number}`
 }
 
+// Unicode mahjong tile codepoints:
+//   万 (Characters): U+1F007–U+1F00F
+//   条 (Bamboo):     U+1F010–U+1F018
+//   筒 (Circles):    U+1F019–U+1F021
+const UNICODE_BASE: Record<Suit, number> = {
+  '万': 0x1F007,
+  '条': 0x1F010,
+  '筒': 0x1F019,
+}
+
+export function tileUnicode(tile: Tile): string {
+  return String.fromCodePoint(UNICODE_BASE[tile.suit] + tile.number - 1)
+}
+
 function tilesToCounts(tiles: Tile[]): Map<string, number> {
   const counts = new Map<string, number>()
   for (const t of tiles) {
@@ -45,7 +74,10 @@ function tilesToCounts(tiles: Tile[]): Map<string, number> {
 }
 
 // Check if 14 tiles form a valid winning hand (4 melds + 1 pair, or 7 pairs)
+// Sichuan rule: hand must use at most 2 suits
 export function isWinningHand(tiles: Tile[]): boolean {
+  const suits = new Set(tiles.map(t => t.suit))
+  if (suits.size > 2) return false
   const counts = tilesToCounts(tiles)
   return isSevenPairs(counts) || canFormMelds(counts, 0)
 }

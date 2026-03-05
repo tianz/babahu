@@ -17,9 +17,9 @@ export default function App() {
     setState({ screen: 'game', round: 1, score: 0, hand: dealHand(), selected: [] })
   }
 
-  function handleRoundComplete(delta: number) {
+  function handleRoundComplete(point: number) {
     setState(prev => {
-      const newScore = prev.score + delta
+      const newScore = prev.score + point
       const nextRound = prev.round + 1
       if (nextRound > 10) {
         return { ...prev, score: newScore, screen: 'result' }
@@ -37,6 +37,7 @@ export default function App() {
       {state.screen === 'main' && <MainScreen onStart={handleStart} />}
       {state.screen === 'game' && (
         <GameScreen
+          key={state.round}
           round={state.round}
           score={state.score}
           hand={state.hand}

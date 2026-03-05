@@ -1,6 +1,7 @@
 .hand {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   gap: 6px;
   justify-content: center;
   padding: 16px;

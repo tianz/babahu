@@ -14,6 +14,14 @@
   padding: 8px 4px;
 }
 
+.correct {
+  color: #2e7d32;
+}
+
+.wrong {
+  color: #c62828;
+}
+
 .sectionLabel {
   font-size: 1rem;
   color: #555;
@@ -38,15 +46,26 @@
   background: #0d47a1;
 }
 
-.result {
+.winningList {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 12px;
 }
 
-.feedback {
-  font-size: 1rem;
+.winningEntry {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  background: #f3f3f3;
+  border-radius: 8px;
+}
+
+.winningLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: bold;
   color: #333;
-  text-align: center;
 }
