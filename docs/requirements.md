@@ -16,7 +16,7 @@ The main screen should have a button to start a new game. Each game should be 10
 ## Game Screen
 On the top, it should display 13 tiles. The tiles should be sorted in order: Simples (万), then Dots (筒), then Banmboo (条). Within each set the tiles should be sorted in numerical order.
 
-On the bottom, it should display all 27 possible tiles, and a submit button.
+On the bottom, it should display all 27 possible tiles, and a submit button. Each suite (9 tiles) should be on its own row.
 
 ## Player Interaction
 On each round, the player clicks on the tiles that can win the game (which will be highlighted), and the submit. The player gets the points if they correctly pick the ones that can win the game. Picking the ones that don't win the game or not picking the ones that do means losing the point.
