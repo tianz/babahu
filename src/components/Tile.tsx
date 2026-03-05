@@ -9,11 +9,18 @@ interface Props {
   dim?: boolean
 }
 
+const SUIT_CLASS: Record<string, string> = {
+  '万': styles.suitMan,
+  '筒': styles.suitPin,
+  '条': styles.suitSou,
+}
+
 export default function TileComponent({ tile, selected, onClick, dim }: Props) {
   return (
     <button
       className={[
         styles.tile,
+        SUIT_CLASS[tile.suit] ?? '',
         selected ? styles.selected : '',
         dim ? styles.dim : '',
         onClick ? styles.clickable : '',
